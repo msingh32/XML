@@ -1,0 +1,127 @@
+<html>
+   <head>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+   </head>
+   <body>
+      <div id="page-wrapper">
+         <input type="file" id="file-input" />
+         <h3>Contents of the file:</h3>
+         <pre id="file-content"></pre>
+      </div>
+      <script>
+        //div tag defines a division or a section in an HTML document.
+        //pre tag element is used to display text with unusual formatting
+         // Function to read the xml file
+           function readSingleFile(e) {
+             var file = e.target.files[0];//Retrieve the file instance
+             console.log(file);
+             if (!file) {
+               return;
+             }
+             var reader = new FileReader();
+             reader.onload = function(e) {
+               var contents = e.target.result;// The file's text will be captured here
+               displayContents(contents);
+
+             //  To Parse the xml file using DOMParsere
+               let xmlDoc = (new DOMParser()).parseFromString(contents, "text/xml");
+            //An XML DOM parser is created.The parser creates a new XML DOM object using the text string:
+            //Variables declared with the let keyword can have Block Scope.
+
+
+            //   To Read the node value from the xml document
+               var node = xmlDoc.documentElement;
+            //Variables declared with the var keyword can not have Block Scope.
+
+            //   Add new drinks milkshake to the xml file
+               addNewDrinks(xmlDoc, "milkshake", 2, 3)
+            //   Pint the xml node values
+               printXML(node)
+            //   Query selector to give all the elements in the node
+               var nodes = node.querySelectorAll("*");//DOM elements using selectors for more information about using selectors to identify elements.
+               // node.querySelectorAll("*") return node list
+            //   To display the list of parents and children of the nodes in the console
+               for (let i = 0; i < nodes.length; i++) {
+                //The nodeName property returns the name of the specified node.
+                 console.log(` %c Parent of ${nodes[i].nodeName} : ${nodes[i].parentNode.nodeName}`,  'color: green');
+                 //The parentNode property returns the parent node of the specified node, as a Node object.
+                 console.log(`%c Children of ${nodes[i].nodeName}:`,'color: green');
+                 //The children property returns a collection of an element's child elements, as an HTMLCollection object.
+                 for (let j = 0; j < nodes[i].children.length; j++)
+                 //nodes[i].children.length return the number of children the node has
+                {
+                   printValue(nodes[i].children[j])
+                 }
+              //  To display the list of decendents of the nodes in the console
+                 console.log(`%c Decendents of ${nodes[i].nodeName}:`,'color: green');
+                 let decendents = nodes[i].querySelectorAll("*");
+                 if (decendents.length == 0) {
+                   console.log(`No decendents of ${nodes[i].nodeName}`);
+                 }
+                 for (let j = 0; j < decendents.length; j++)
+                 // descendent.length return the number of children the node has
+                 {
+                   printValue(decendents[j])
+
+                 }
+               //  To display the list of Siblings of the nodes in the console
+                 console.log(`%c Siblings of ${nodes[i].nodeName}:`,'color: green');
+                 let siblings = $(nodes[i]).siblings() //The siblings() method returns all sibling elements of the selected element.
+                 if (siblings.length == 0) {
+                   console.log(`No siblings of ${nodes[i].nodeName}`);
+                 }
+                 for (let j = 0; j < siblings.length; j++) {
+                   printValue(siblings[j])
+
+                 }
+               }
+               console.log(nodes);
+             };
+             reader.readAsText(file);
+            // As this is an asynchronous method we need to setup an event listener for when the file has finished loading.
+            //When the onload event is called we can examine the result property of our FileReader instance to get the file’s contents.
+           }
+         //  Function to display the contents of the xml file
+           function displayContents(contents) {
+             var element = document.getElementById('file-content');
+             element.textContent = contents;
+           }
+         //  Function to display the elements of the nodes
+           function printValue(element) {
+             if (element.nodeName == 'price' || element.nodeName == 'amount') {
+               console.log(`${element.nodeName} : ${element.textContent}`);
+             } else {
+               console.log(element.nodeName);
+             }
+           }
+         //   Function to add new drinks to the xml file
+           function addNewDrinks(xmlDoc, drinkName, price, amount) {
+             drinkEle = xmlDoc.createElement(drinkName);//Create a drinkName element
+
+             priceEle = xmlDoc.createElement("price");//Create a price element
+             priceText = xmlDoc.createTextNode(price);// createTextNode() method creates a Text Node with the specified text.
+             priceEle.appendChild(priceText);//The appendChild() method appends a node as the last child of a node.
+
+             amountEle = xmlDoc.createElement("amount");//Create a amount element
+             amountText = xmlDoc.createTextNode(amount);//createTextNode() method creates a Text Node with the specified text.
+             amountEle.appendChild(amountText);//The appendChild() method appends a node as the last child of a node.
+
+             drinkEle.appendChild(priceEle)
+             drinkEle.appendChild(amountEle)
+
+             xmlDoc.getElementsByTagName("drink")[0].appendChild(drinkEle);
+           }
+         //   Function to print the xml node values
+           function printXML(XMLObject) {
+             console.dirxml(XMLObject);//Displays an interactive tree of the descendant elements of the specified XML/HTML element.
+             //If it is not possible to display as an element the JavaScript Object view is shown instead. The output is presented
+             //as a hierarchical listing of expandable nodes that let you see the contents of child nodes.
+           }
+
+           document.getElementById('file-input')
+             .addEventListener('change', readSingleFile, false);
+             //Event listener on the fileInput that listens for the change event. This will be fired whenever the user selects a file.
+
+      </script>
+   </body>
+</html>

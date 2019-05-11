@@ -1,0 +1,31 @@
+<inventory> 
+   <drink>
+        <lemonade>
+            <price>$2.5</price>
+            <amount>6</amount>
+        </lemonade>
+        <pop>
+            <price>1.55</price>
+            <amount>11</amount>
+        </pop>
+    </drink>    
+    <snack>
+        <chips>
+            <price>$4.67</price>
+            <amount>6</amount>
+        </chips>
+        <bread>
+            <type>wheat</type>
+            <price>2.4</price>
+            <amount>4</amount>
+            
+            <type>rye</type>
+            <price>$2.80</price>
+            <amount>23</amount>
+            
+            <type>grains</type>
+            <price>$2.90</price>
+            <amount>14</amount>
+        </bread>
+    </snack>
+</inventory>
